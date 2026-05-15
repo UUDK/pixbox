@@ -1,0 +1,3 @@
+STROKE_COLOR = "black"
+STROKE_WIDTH = 0.025
+FIELD_FILL = "white"
