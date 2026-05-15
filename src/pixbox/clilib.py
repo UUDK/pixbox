@@ -67,7 +67,9 @@ def parse_render_options(
 ) -> RenderOptions:
     parser = _parser(
         default_name=default_name or _caller_stem(),
-        default_destdir=Path(default_destdir) if default_destdir is not None else Path("."),
+        default_destdir=Path(default_destdir)
+        if default_destdir is not None
+        else Path("."),
         default_png=default_png,
         default_svg=default_svg,
         default_scale=default_scale,

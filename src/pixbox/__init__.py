@@ -11,7 +11,20 @@ from . import clilib as cli
 Drawable: TypeAlias = Figure | Connection
 
 __all__ = [
-    'Drawable', 'Text', 'TextBody', 'Anchor', 'Figure', 
-    'Connection', 'ArrowType', 'TextProp', 'TextAlign', 
-    'Box', 'Fig', 'Factory', 'Drawing', 'Point', 'Offset', 'cli'
+    "Drawable",
+    "Text",
+    "TextBody",
+    "Anchor",
+    "Figure",
+    "Connection",
+    "ArrowType",
+    "TextProp",
+    "TextAlign",
+    "Box",
+    "Fig",
+    "Factory",
+    "Drawing",
+    "Point",
+    "Offset",
+    "cli",
 ]

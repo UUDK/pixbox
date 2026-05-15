@@ -12,7 +12,9 @@ def test_fig_sequence_box_with_count_creates_anchor_cells() -> None:
 
 
 def test_fig_sequence_box_accepts_text_cells() -> None:
-    box = Fig.sequence_box(0.0, 0.0, elements=["Andrew", TextBody("Ben")], cell_width=3.0)
+    box = Fig.sequence_box(
+        0.0, 0.0, elements=["Andrew", TextBody("Ben")], cell_width=3.0
+    )
 
     assert box.w == 6.0
     assert isinstance(box.grid[0][0], TextBody)

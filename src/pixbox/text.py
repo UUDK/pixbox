@@ -86,7 +86,9 @@ class TextBody:
             return item
         if isinstance(item, str):
             return Text(item)
-        raise TypeError("TextBody content must be str, Text, or a sequence of str | Text")
+        raise TypeError(
+            "TextBody content must be str, Text, or a sequence of str | Text"
+        )
 
     @property
     def max_size(self) -> float:

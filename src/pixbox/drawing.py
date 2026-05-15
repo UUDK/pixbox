@@ -70,7 +70,9 @@ class Drawing:
 
     def draw(self) -> dw.Drawing:
         bounds = self.bounds().with_margin(self.margin)
-        dwg = dw.Drawing(bounds.width, bounds.height, origin=(bounds.x_min, bounds.y_min))
+        dwg = dw.Drawing(
+            bounds.width, bounds.height, origin=(bounds.x_min, bounds.y_min)
+        )
         dwg.set_render_size(bounds.width * self.scale, bounds.height * self.scale)
 
         if self.background is not None:

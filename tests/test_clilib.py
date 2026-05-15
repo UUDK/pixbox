@@ -17,7 +17,9 @@ def test_parse_render_options_uses_script_name_defaults() -> None:
     assert options.svg is True
 
 
-def test_parse_render_options_accepts_makefile_friendly_overrides(tmp_path: Path) -> None:
+def test_parse_render_options_accepts_makefile_friendly_overrides(
+    tmp_path: Path,
+) -> None:
     options = parse_render_options(
         argv=[
             "--name",

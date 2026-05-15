@@ -76,7 +76,9 @@ class Box(Figure):
         col_count = max((len(row) for row in self.grid), default=0)
         row_count = len(self.grid)
 
-        col_spec, row_spec = self.grid_size if self.grid_size is not None else (None, None)
+        col_spec, row_spec = (
+            self.grid_size if self.grid_size is not None else (None, None)
+        )
         self.col_widths = self._normalize_sizes(col_spec, col_count, "column")
         self.row_heights = self._normalize_sizes(row_spec, row_count, "row")
 
@@ -94,7 +96,9 @@ class Box(Figure):
         self._set_cell_anchors()
 
     @staticmethod
-    def _normalize_sizes(spec: SizeSpec, count: int, axis_name: str) -> tuple[float, ...]:
+    def _normalize_sizes(
+        spec: SizeSpec, count: int, axis_name: str
+    ) -> tuple[float, ...]:
         if count == 0:
             return ()
 
@@ -185,14 +189,20 @@ class Box(Figure):
             g.append(line)
 
         if self.header is not None and isinstance(self.header, TextBody):
-            g.append(self._draw_text_body(self.header, self.origin, box_width, self.header_height))
+            g.append(
+                self._draw_text_body(
+                    self.header, self.origin, box_width, self.header_height
+                )
+            )
 
         for row_index, row in enumerate(self.grid):
             for col_index, cell in enumerate(row):
                 if isinstance(cell, TextBody):
                     origin = self.cell_origin(row_index, col_index)
                     cell_width, cell_height = self.cell_size(row_index, col_index)
-                    g.append(self._draw_text_body(cell, origin, cell_width, cell_height))
+                    g.append(
+                        self._draw_text_body(cell, origin, cell_width, cell_height)
+                    )
 
         g.append(
             dw.Rectangle(
@@ -258,7 +268,9 @@ class Box(Figure):
     ) -> dw.DrawingElement:
         group = dw.Group()
         line_step = text_body.line_step
-        total_height = line_step * (len(text_body.lines) - 1) if text_body.lines else 0.0
+        total_height = (
+            line_step * (len(text_body.lines) - 1) if text_body.lines else 0.0
+        )
         y_start = origin.y + height / 2.0 - total_height / 2.0
 
         for index, line in enumerate(text_body.lines):
@@ -282,7 +294,9 @@ class Box(Figure):
         return group
 
     @staticmethod
-    def _text_x_and_anchor(line: Text, origin: Point, width: float) -> tuple[float, str]:
+    def _text_x_and_anchor(
+        line: Text, origin: Point, width: float
+    ) -> tuple[float, str]:
         if line.align is TextAlign.RIGHT:
             return origin.x + width - TEXT_PADDING, "end"
         if line.align is TextAlign.CENTER:
