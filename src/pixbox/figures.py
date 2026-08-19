@@ -7,7 +7,7 @@ from typing import TypeAlias
 import drawsvg as dw
 
 from .point import Point
-from .style import FIELD_FILL, STROKE_COLOR, STROKE_WIDTH
+from .style import FIELD_FILL, GHOST_STROKE_COLOR, STROKE_COLOR, STROKE_WIDTH
 from .text import Text, TextAlign, TextBody, TextProp
 
 
@@ -23,6 +23,7 @@ class Figure(ABC):
     y: float
     w: float | None = None
     h: float | None = None
+    ghost: bool = False
 
     @property
     def origin(self) -> Point:
@@ -183,6 +184,7 @@ class Box(Figure):
     def draw(self) -> dw.DrawingElement:
         g = dw.Group()
         box_width, box_height = self._size()
+        stroke_color = self._stroke_color()
 
         g.append(self._draw_box_background(box_width, box_height))
         for line in self._draw_field_lines():
@@ -210,7 +212,7 @@ class Box(Figure):
                 self.y,
                 box_width,
                 box_height,
-                stroke=STROKE_COLOR,
+                stroke=stroke_color,
                 stroke_width=STROKE_WIDTH,
                 fill="none",
                 rx=self.corners_radius,
@@ -248,14 +250,13 @@ class Box(Figure):
 
         return lines
 
-    @staticmethod
-    def _line(x1: float, y1: float, x2: float, y2: float) -> dw.DrawingElement:
+    def _line(self, x1: float, y1: float, x2: float, y2: float) -> dw.DrawingElement:
         return dw.Line(
             x1,
             y1,
             x2,
             y2,
-            stroke=STROKE_COLOR,
+            stroke=self._stroke_color(),
             stroke_width=STROKE_WIDTH,
         )
 
@@ -285,13 +286,16 @@ class Box(Figure):
                     text_anchor=text_anchor,
                     dominant_baseline="central",
                     font_family=line.font_family,
-                    fill=STROKE_COLOR,
+                    fill=self._stroke_color(),
                     font_weight="bold" if TextProp.BOLD in line.props else "normal",
                     font_style="italic" if TextProp.ITALIC in line.props else "normal",
                 )
             )
 
         return group
+
+    def _stroke_color(self) -> str:
+        return GHOST_STROKE_COLOR if self.ghost else STROKE_COLOR
 
     @staticmethod
     def _text_x_and_anchor(

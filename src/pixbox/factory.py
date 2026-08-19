@@ -22,6 +22,7 @@ class Fig:
         *,
         w: float = 3.0,
         simple_type: str = "int",
+        ghost: bool = False,
     ) -> Box:
         value = _as_cell("..." if element is None else element)
         return Box(
@@ -31,6 +32,7 @@ class Fig:
             grid=[[value]],
             grid_size=(w, 1.0),
             corners_radius=DATA_CORNERS_RADIUS,
+            ghost=ghost,
         )
 
     @staticmethod
@@ -41,6 +43,7 @@ class Fig:
         *,
         cell_width: float = 1.0,
         seq_type: str = "list",
+        ghost: bool = False,
     ) -> Box:
         cells = _sequence_cells(elements)
         return Box(
@@ -50,6 +53,7 @@ class Fig:
             grid=[cells],
             grid_size=(cell_width, 1.0),
             corners_radius=DATA_CORNERS_RADIUS,
+            ghost=ghost,
         )
 
     @staticmethod
@@ -60,6 +64,7 @@ class Fig:
         *,
         cell_height: float = 1.0,
         seq_type: str = "list",
+        ghost: bool = False,
     ) -> Box:
         rows = [[cell] for cell in _sequence_cells(elements)]
         return Box(
@@ -69,6 +74,7 @@ class Fig:
             grid=rows,
             grid_size=(1.0, cell_height),
             corners_radius=DATA_CORNERS_RADIUS,
+            ghost=ghost,
         )
 
     @staticmethod
@@ -80,6 +86,7 @@ class Fig:
         key_width: float = 3.0,
         value_width: float = 1.0,
         map_type: str = "dict",
+        ghost: bool = False,
     ) -> Box:
         return Fig.dict_box(
             x,
@@ -88,6 +95,7 @@ class Fig:
             key_width=key_width,
             value_width=value_width,
             dict_type=map_type,
+            ghost=ghost,
         )
 
     mapping_box_vert = mapping_box
@@ -101,6 +109,7 @@ class Fig:
         key_width: float = 3.0,
         value_width: float = 1.0,
         dict_type: str = "dict",
+        ghost: bool = False,
     ) -> Box:
         return _mapping_box(
             x,
@@ -110,6 +119,7 @@ class Fig:
             value_width=value_width,
             header=dict_type,
             corners_radius=DATA_CORNERS_RADIUS,
+            ghost=ghost,
         )
 
     @staticmethod
@@ -121,6 +131,7 @@ class Fig:
         name_width: float = 3.0,
         value_width: float = 1.0,
         name: str = "__main__",
+        ghost: bool = False,
     ) -> Box:
         return _mapping_box(
             x,
@@ -130,6 +141,7 @@ class Fig:
             value_width=value_width,
             header=name,
             corners_radius=META_CORNERS_RADIUS,
+            ghost=ghost,
         )
 
 
@@ -157,6 +169,7 @@ def _mapping_box(
     value_width: float,
     header: str,
     corners_radius: float,
+    ghost: bool = False,
 ) -> Box:
     rows = [[_as_cell(key), _as_cell(value)] for key, value in (elements or [])]
     return Box(
@@ -166,6 +179,7 @@ def _mapping_box(
         grid=rows,
         grid_size=([key_width, value_width], 1.0),
         corners_radius=corners_radius,
+        ghost=ghost,
     )
 
 

@@ -4,7 +4,7 @@ import drawsvg as dw
 import pytest
 
 from pixbox import ArrowType, Connection, Point
-from pixbox.style import STROKE_WIDTH
+from pixbox.style import GHOST_STROKE_COLOR, STROKE_WIDTH
 
 
 def _child(group: Any, index: int) -> Any:
@@ -68,3 +68,22 @@ def test_unimplemented_arrow_types_fail_explicitly() -> None:
 
     with pytest.raises(NotImplementedError):
         connection.draw()
+
+
+def test_ghost_connection_draws_line_and_markers_in_ghost_color() -> None:
+    connection = Connection(
+        [Point(0.0, 0.0), Point(1.0, 0.0)],
+        begin_arrow=ArrowType.DOT,
+        end_arrow=ArrowType.NARROW_FILLED,
+        ghost=True,
+    )
+
+    group = connection.draw()
+    line = _child(group, 0)
+    dot_marker = _child(group, 1)
+    filled_marker = _child(group, 2)
+
+    assert line.args["stroke"] == GHOST_STROKE_COLOR
+    assert dot_marker.args["stroke"] == GHOST_STROKE_COLOR
+    assert filled_marker.args["stroke"] == GHOST_STROKE_COLOR
+    assert filled_marker.args["fill"] == GHOST_STROKE_COLOR

@@ -4,7 +4,7 @@ import drawsvg as dw
 import pytest
 
 from pixbox import Box, Text, TextAlign, TextBody
-from pixbox.style import FIELD_FILL, STROKE_WIDTH
+from pixbox.style import FIELD_FILL, GHOST_STROKE_COLOR, STROKE_WIDTH
 
 
 def _children_of_type(group: Any, cls: type) -> list[Any]:
@@ -124,3 +124,28 @@ def test_multiline_text_spacing_uses_largest_line_size() -> None:
     assert text_elements[0].args["font-size"] == 0.2
     assert text_elements[1].args["font-size"] == 0.8
     assert text_elements[1].args["y"] - text_elements[0].args["y"] == pytest.approx(1.0)
+
+
+def test_ghost_box_draws_strokes_and_text_in_ghost_color() -> None:
+    box = Box(
+        0.0,
+        0.0,
+        header=TextBody("dict"),
+        grid=[[TextBody("value")]],
+        ghost=True,
+    )
+
+    group = box.draw()
+    rects = _children_of_type(group, dw.Rectangle)
+    lines = _children_of_type(group, dw.Line)
+    text_groups = _children_of_type(group, dw.Group)
+    text_elements = [
+        child
+        for text_group in text_groups
+        for child in text_group.children
+        if isinstance(child, dw.Text)
+    ]
+
+    assert rects[-1].args["stroke"] == GHOST_STROKE_COLOR
+    assert all(line.args["stroke"] == GHOST_STROKE_COLOR for line in lines)
+    assert all(text.args["fill"] == GHOST_STROKE_COLOR for text in text_elements)

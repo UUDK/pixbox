@@ -7,7 +7,7 @@ from math import atan2, cos, sin
 import drawsvg as dw
 
 from .point import Offset, Point
-from .style import STROKE_COLOR, STROKE_WIDTH
+from .style import GHOST_STROKE_COLOR, STROKE_COLOR, STROKE_WIDTH
 
 
 ARROW_LENGTH = 0.28
@@ -33,11 +33,13 @@ class Connection:
     path: list[Point] = field(default_factory=list)
     begin_arrow: ArrowType = ArrowType.NONE
     end_arrow: ArrowType = ArrowType.NONE
+    ghost: bool = False
 
     def draw(self) -> dw.DrawingElement:
         group = dw.Group()
+        stroke_color = self._stroke_color()
 
-        line = dw.Path(stroke=STROKE_COLOR, stroke_width=STROKE_WIDTH, fill="none")
+        line = dw.Path(stroke=stroke_color, stroke_width=STROKE_WIDTH, fill="none")
         if self.path:
             first = self.path[0]
             line.M(first.x, first.y)
@@ -70,7 +72,7 @@ class Connection:
                 tip.x,
                 tip.y,
                 DOT_RADIUS,
-                stroke=STROKE_COLOR,
+                stroke=self._stroke_color(),
                 stroke_width=STROKE_WIDTH,
                 fill="white",
             )
@@ -81,11 +83,11 @@ class Connection:
 
         raise NotImplementedError(f"Arrow type is not implemented yet: {arrow.name}")
 
-    @staticmethod
     def _draw_narrow_arrow(
-        tip: Point, direction: Offset, *, filled: bool
+        self, tip: Point, direction: Offset, *, filled: bool
     ) -> dw.DrawingElement:
         left, right = _arrow_base_points(tip, direction, ARROW_LENGTH, ARROW_WIDTH)
+        stroke_color = self._stroke_color()
 
         if filled:
             return dw.Lines(
@@ -96,14 +98,17 @@ class Connection:
                 right.x,
                 right.y,
                 close=True,
-                stroke=STROKE_COLOR,
+                stroke=stroke_color,
                 stroke_width=STROKE_WIDTH,
-                fill=STROKE_COLOR,
+                fill=stroke_color,
             )
 
-        path = dw.Path(stroke=STROKE_COLOR, stroke_width=STROKE_WIDTH, fill="none")
+        path = dw.Path(stroke=stroke_color, stroke_width=STROKE_WIDTH, fill="none")
         path.M(left.x, left.y).L(tip.x, tip.y).L(right.x, right.y)
         return path
+
+    def _stroke_color(self) -> str:
+        return GHOST_STROKE_COLOR if self.ghost else STROKE_COLOR
 
 
 def _arrow_base_points(

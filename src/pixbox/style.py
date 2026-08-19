@@ -1,3 +1,4 @@
 STROKE_COLOR = "black"
+GHOST_STROKE_COLOR = "#b8b8b8"
 STROKE_WIDTH = 0.025
 FIELD_FILL = "white"
